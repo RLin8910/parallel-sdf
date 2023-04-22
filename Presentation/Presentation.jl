@@ -155,7 +155,22 @@ end
 @time SerialSDF.dijkstraSDF2D(petty_threshold)
 
 # ╔═╡ 68510fbf-c135-4157-9835-58f2d8950d85
-@time ParallelSDF.dijkstraSDF2D(petty_threshold)
+@time ParallelSDF.dijkstraSDF2DSerialUDF(petty_threshold)
+
+# ╔═╡ dc99c890-3401-488d-b551-2f75a6f472a2
+@time ParallelSDF.dijkstraSDF2DParallelUDF(petty_threshold)
+
+# ╔═╡ 53c81bbe-305e-4c69-8b85-2c3f56f5bbdc
+@time SerialSDF.dijkstraSDF2D(amogus_threshold)
+
+# ╔═╡ f575b998-3cf0-46e4-8340-43545ad58b5f
+@time ParallelSDF.dijkstraSDF2DSerialUDF(amogus_threshold)
+
+# ╔═╡ 655b3f4b-e900-4e85-a992-78421549b5cd
+# ╠═╡ disabled = true
+#=╠═╡
+@time ParallelSDF.dijkstraSDF2DParallelUDF(amogus_threshold)
+  ╠═╡ =#
 
 # ╔═╡ Cell order:
 # ╠═fbec5760-dfb8-11ed-19ce-8753ae969cde
@@ -181,3 +196,7 @@ end
 # ╠═39f9509e-cca3-401e-b0c0-15dcea99d03e
 # ╠═c0c48ebd-afb8-4df7-868e-46efbddd5484
 # ╠═68510fbf-c135-4157-9835-58f2d8950d85
+# ╠═dc99c890-3401-488d-b551-2f75a6f472a2
+# ╠═53c81bbe-305e-4c69-8b85-2c3f56f5bbdc
+# ╠═f575b998-3cf0-46e4-8340-43545ad58b5f
+# ╠═655b3f4b-e900-4e85-a992-78421549b5cd
