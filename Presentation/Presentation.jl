@@ -166,10 +166,33 @@ end
 # ╔═╡ f575b998-3cf0-46e4-8340-43545ad58b5f
 @time ParallelSDF.dijkstraSDF2DSerialUDF(amogus_threshold)
 
-# ╔═╡ 655b3f4b-e900-4e85-a992-78421549b5cd
+# ╔═╡ 82ba0aa1-8c52-4f9c-b684-406a10580abc
 # ╠═╡ disabled = true
 #=╠═╡
-@time ParallelSDF.dijkstraSDF2DParallelUDF(amogus_threshold)
+begin
+	huge = SerialSDF.threshold(load("./images/huge.png"))
+	Gray.(huge)
+end
+  ╠═╡ =#
+
+# ╔═╡ a6a5633a-96bf-4583-a9eb-d1a059661d92
+#=╠═╡
+@time hugeParallel = ParallelSDF.dijkstraSDF2DSerialUDF(huge)
+  ╠═╡ =#
+
+# ╔═╡ 48553d19-b17b-4604-b538-1c5654f8fd22
+#=╠═╡
+SDFVis.toImageSDF(hugeParallel)
+  ╠═╡ =#
+
+# ╔═╡ fad485f1-78e6-4684-8fe3-45fed255875b
+#=╠═╡
+@time hugeSerial = SerialSDF.dijkstraSDF2D(huge)
+  ╠═╡ =#
+
+# ╔═╡ ce16152a-8764-45df-b05e-13f14f97309f
+#=╠═╡
+SDFVis.toImageSDF(hugeSerial)
   ╠═╡ =#
 
 # ╔═╡ Cell order:
@@ -199,4 +222,8 @@ end
 # ╠═dc99c890-3401-488d-b551-2f75a6f472a2
 # ╠═53c81bbe-305e-4c69-8b85-2c3f56f5bbdc
 # ╠═f575b998-3cf0-46e4-8340-43545ad58b5f
-# ╠═655b3f4b-e900-4e85-a992-78421549b5cd
+# ╠═82ba0aa1-8c52-4f9c-b684-406a10580abc
+# ╠═a6a5633a-96bf-4583-a9eb-d1a059661d92
+# ╠═48553d19-b17b-4604-b538-1c5654f8fd22
+# ╠═fad485f1-78e6-4684-8fe3-45fed255875b
+# ╠═ce16152a-8764-45df-b05e-13f14f97309f
