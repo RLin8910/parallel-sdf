@@ -44,6 +44,12 @@ begin
 	using .ParallelSDF
 end
 
+# ╔═╡ d57efba8-7df2-4cf5-82c3-45e6fa7bb10e
+load("./Images/amogus.png")
+
+# ╔═╡ 6f73ccba-c92b-4d7e-af0e-5051a090bca0
+load("./Images/example_amogus.png")
+
 # ╔═╡ e02b0513-471d-43e4-8e3d-510fac112c4d
 begin
 	# Generated Images
@@ -197,6 +203,8 @@ SDFVis.toImageSDF(hugeSerial)
 
 # ╔═╡ Cell order:
 # ╠═fbec5760-dfb8-11ed-19ce-8753ae969cde
+# ╠═d57efba8-7df2-4cf5-82c3-45e6fa7bb10e
+# ╠═6f73ccba-c92b-4d7e-af0e-5051a090bca0
 # ╠═b8ff7564-a124-4605-8506-56b7ceeba8f8
 # ╠═e02b0513-471d-43e4-8e3d-510fac112c4d
 # ╠═5baa54db-95d8-4c71-a991-1b145128d788
