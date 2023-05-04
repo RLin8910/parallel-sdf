@@ -8,6 +8,62 @@ include("./SerialSDF.jl")
 using .SDFStructs
 using .SerialSDF
 
+@views function makechunks(X::AbstractVector, n::Integer)
+    c = length(X) ÷ n
+    return [X[1+c*k:(k == n-1 ? end : c*k+c)] for k = 0:n-1]
+end
+
+"""
+Compute the signed distance field for a 2D matrix of booleans with a brute force parallelized approach.
+
+True values are considered to be inside of the region, while false values are considered outside.
+"""
+function bruteSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
+    result = zeros(size(img))
+
+    chunks = makechunks(collect(1:size(img,1)), Threads.nthreads())
+
+    @sync @Threads.threads for chunk in chunks
+        for x in chunk
+            for y in 1:size(img, 2)
+                # if black, determine distance to closest white pixel.
+                # if white, determine distance to closest black pixel.
+                # white pixels are "interior", black pixels are "exterior"
+                # interior is negative distance. exterior is positive distance
+                bestDistance = Inf
+
+                # determine best distance by brute force
+                for x1 in 1:size(img,1)
+                    for y1 in 1:size(img, 2)
+                        if img[x1, y1] != img[x, y]
+                            # compute distance to boundary of nearest opposite pixel, not the center
+                            dist = 0
+                            if x1 == x || y1 == y
+                                # pixels in same row/col, nearest boundary point is on the center of the edge
+                                dist = abs(x1 - x) + abs(y1 - y) - 0.5
+                            else
+                                # pixels in different row and col, nearest boundary point is on a corner
+                                dist = sqrt((abs(x1-x)-0.5)^2 + (abs(y1-y)-0.5)^2)
+                            end
+                            if dist < bestDistance
+                                bestDistance = dist
+                            end
+                        end
+                    end
+                end
+                
+                # invert if inside the region
+                if img[x, y]
+                    result[x,y] = -bestDistance
+                else
+                    result[x,y] = bestDistance
+                end
+            end
+        end
+    end
+    return result
+end
+
 """
 Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra's algorithm.
 
@@ -75,7 +131,7 @@ function dijkstraUDF2DParallel(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Fl
         current = undef
         part = 0
 
-        for i in 1:threadCount
+        Threads.@threads for i in 1:threadCount
             if length(pqs[i]) == 0
                 continue
             end
@@ -152,6 +208,7 @@ function dijkstraSDF2DParallelUDF(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix
     return dijkstraUDF2DParallel(img) - dijkstraUDF2DParallel(.!img)
 end
 
+export bruteSDF2D
 export dijkstraUDF2DParallel
 export dijkstraSDF2DSerialUDF
 end #ParallelSDF

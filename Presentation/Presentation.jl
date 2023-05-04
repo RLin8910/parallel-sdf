@@ -163,6 +163,9 @@ end
 # ╔═╡ 68510fbf-c135-4157-9835-58f2d8950d85
 @time ParallelSDF.dijkstraSDF2DSerialUDF(petty_threshold)
 
+# ╔═╡ 957d00d9-707e-4c5e-96af-e011cefbb326
+asdfasdfa@time ParallelSDF.bruteSDF2D(petty_threshold)
+
 # ╔═╡ dc99c890-3401-488d-b551-2f75a6f472a2
 @time ParallelSDF.dijkstraSDF2DParallelUDF(petty_threshold)
 
@@ -171,6 +174,14 @@ end
 
 # ╔═╡ f575b998-3cf0-46e4-8340-43545ad58b5f
 @time ParallelSDF.dijkstraSDF2DSerialUDF(amogus_threshold)
+
+# ╔═╡ 7fbdc040-3e01-426b-b3a7-1d3cd2591bb2
+# time serial Dijkstra step 
+@time SerialSDF.dijkstraUDF2D(amogus_threshold)
+
+# ╔═╡ 50176a7e-e8de-47d6-b29b-5aa8e7177355
+# time serial Dijkstra inverse step
+@time SerialSDF.dijkstraUDF2D(.!amogus_threshold)
 
 # ╔═╡ 82ba0aa1-8c52-4f9c-b684-406a10580abc
 # ╠═╡ disabled = true
@@ -227,9 +238,12 @@ SDFVis.toImageSDF(hugeSerial)
 # ╠═39f9509e-cca3-401e-b0c0-15dcea99d03e
 # ╠═c0c48ebd-afb8-4df7-868e-46efbddd5484
 # ╠═68510fbf-c135-4157-9835-58f2d8950d85
+# ╠═957d00d9-707e-4c5e-96af-e011cefbb326
 # ╠═dc99c890-3401-488d-b551-2f75a6f472a2
 # ╠═53c81bbe-305e-4c69-8b85-2c3f56f5bbdc
 # ╠═f575b998-3cf0-46e4-8340-43545ad58b5f
+# ╠═7fbdc040-3e01-426b-b3a7-1d3cd2591bb2
+# ╠═50176a7e-e8de-47d6-b29b-5aa8e7177355
 # ╠═82ba0aa1-8c52-4f9c-b684-406a10580abc
 # ╠═a6a5633a-96bf-4583-a9eb-d1a059661d92
 # ╠═48553d19-b17b-4604-b538-1c5654f8fd22
