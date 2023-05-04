@@ -64,7 +64,7 @@ function dijkstraSDF2DSerialUDF(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{F
     neg = undef
     @sync begin
         Threads.@spawn pos = SerialSDF.dijkstraUDF2D(img) 
-        Threads.@spawn neg = SerialSDF.dijkstraUDF2D(.!img)
+        Threads.@spawn neg = SerialSDF.dijkstraUDF2D(img, true)
     end
     return pos - neg
 end

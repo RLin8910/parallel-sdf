@@ -70,7 +70,7 @@ Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra's 
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
-function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
+function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}, invert:: Bool = false):: Matrix{Float64}
     dirs = SVector{8, SVector{2, Int}}([[-1;-1], [-1; 0], [-1;1], [0;1], [1;1], [1;0], [1;-1], [0,-1]])
     
     # initiale data structures
@@ -81,7 +81,7 @@ function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
     # seeding
     for x in 1:size(img,1)
         for y in 1:size(img,2)
-            if img[x,y]
+            if img[x,y] != invert
                 for dir in dirs
                     x1 = x + dir[1]
                     y1 = y + dir[2]
@@ -91,7 +91,7 @@ function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
                     if y1 < 1 || y1 > size(img,2)
                         continue
                     end
-                    if img[x1, y1]
+                    if img[x1, y1] != invert
                         continue
                     end
                     # distance to center of edge
@@ -126,7 +126,7 @@ function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
             if y1 < 1 || y1 > size(img,2)
                 continue
             end
-            if closed[x1, y1] || img[x1, y1]
+            if closed[x1, y1] || img[x1, y1] != invert
                 continue
             end
             dx1 = current.dx - dir[1]
@@ -149,7 +149,7 @@ True values are considered to be inside of the region, while false values are co
 function dijkstraSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
     # compute unsigned distance from black pixels, then subtract unsigned distance from white
     # to get SDF
-    return dijkstraUDF2D(img) - dijkstraUDF2D(.!img)
+    return dijkstraUDF2D(img) - dijkstraUDF2D(img, true)
 end
 
 export bruteSDF2D
