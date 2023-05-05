@@ -66,7 +66,7 @@ function bruteSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
 end
 
 """
-Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra's algorithm.
+Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra'closestX algorithm.
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
@@ -142,7 +142,7 @@ function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}, invert:: Bool = fal
 end
 
 """
-Compute the signed distance field for a 2D matrix of booleans with Dijkstra's algorithm.
+Compute the signed distance field for a 2D matrix of booleans with Dijkstra'closestX algorithm.
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
@@ -152,7 +152,123 @@ function dijkstraSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
     return dijkstraUDF2D(img) - dijkstraUDF2D(img, true)
 end
 
+"""
+Compute the unsigned distance field for a 2D matrix of booleans with a linear-time distance transform.
+
+True values are considered to be inside of the region, while false values are considered outside.
+"""
+function linearUDF2D(img:: Union{Matrix{Bool}, BitMatrix}, invert::Bool = false):: Matrix{Float64}
+    max_val = size(img,1) + size(img,2) + 2 # "Infinity" value which is guaranteed to be larger than all distances
+    result = zeros(size(img))
+    g = zeros(size(img))
+
+    # determine the horizontal UDF in the first pass, i.e. the distance to the closest white pixel
+    # which is on the same row
+    for x in 1:size(img,1)
+        if img[x, 1] != invert
+            g[x, 1] = 0
+        else
+            g[x, 1] = max_val
+        end
+
+        # nearest distance pass from below
+        for y in 2:size(img,2)
+            if img[x,y] != invert
+                g[x,y] = 0
+            else
+                g[x,y] = 1 + g[x, y-1]
+            end
+        end
+        
+        # nearest distance pass from above
+        for y in (size(img,2)-1):-1:1
+            if g[x, y+1] < g[x,y]
+                g[x,y] = 1 + g[x, y+1]
+            end
+        end
+    end
+
+    """
+    Compute the best squared distance from the pixel at [x,y] to any white pixel on the ith column
+
+    Use squared distance because the actual value is not relevant, only what is closer and further
+    """
+    function pix_dist(x, y, i)
+        return (x-i)^2 + g[i,y]^2
+    end
+
+    """
+    Compute the segment endpoint. 
+
+    As the scan partitions the region horizontally based on closest x coordinate, `sep` computes the endpoint of the 
+    segment. 
+    """
+    function sep(i, x, y)
+        return floor(Int, (x^2 - i^2 + g[x,y]^2 - g[i,y]^2) / (2*(x-i)))
+    end
+
+    closestX = Array{Int64}(undef, size(img,1))
+    endpts = Array{Int64}(undef, size(img,2))
+
+    # vertical pass - make use of previous best computed horizontal distances to pair with best vertical distance in similar
+    # 2-pass approach
+    for y in 1:size(img,2)
+        seg = 1
+        closestX[1] = 1
+        endpts[1] = 1
+        # nearest distance pass from left
+
+        # partition into regions using closestX and endpts which indicate the closest set of coordinates
+        # endpts indicates the endpoints of these partitions, while closestX indicates the x coordinates of the point
+        for x in 2:size(img, 1)
+            # create partition
+            while seg > 0 && pix_dist(endpts[seg], y, closestX[seg]) > pix_dist(endpts[seg], y, x)
+                seg -= 1
+            end
+            if seg < 1
+                # first partition closest coordinate
+                seg = 1
+                closestX[1] = x
+            else
+                # consequtive partition endpoints and closest coordinates
+                endpt = 1+sep(closestX[seg], x, y)
+                if endpt <= size(img, 1)
+                    seg += 1
+                    closestX[seg] = x
+                    endpts[seg] = endpt
+                end
+            end
+        end
+
+        # nearest distance pass from right - make use of endpoints
+        for x in size(img,1):-1:1
+            # Use different distance metric here - calculate based on nearest edge, and take square root
+            diffx = x == closestX[seg] ? 0 : abs(x-closestX[seg]) - 0.5
+            diffy = g[closestX[seg], y] == 0 ? 0 : g[closestX[seg],y] - 0.5
+
+            result[x,y] = sqrt(diffx^2 + diffy^2)
+            # Decrement the segment number
+            if x == endpts[seg]
+                seg -= 1
+            end
+        end
+    end
+
+    return result
+end
+
+"""
+Compute the signed distance field for a 2D matrix of booleans using a linear-time distance transform algorithm.
+
+True values are considered to be inside of the region, while false values are considered outside.
+"""
+function linearSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
+    return linearUDF2D(img) - linearUDF2D(img, true)
+end
+
 export bruteSDF2D
 export dijkstraUDF2D
 export dijkstraSDF2D
+export linearUDF2D
+export linearSDF2D
 end # SerialSDF
