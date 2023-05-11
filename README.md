@@ -7,6 +7,8 @@ This project contains several algorithms for computing a signed distance field i
 
 In order to optimize performance of the signed distance field computation, both parallel and serial considerations were made when comparing the three different algorithms. In particular, serial performance can be significantly optimized compared to brute-force algorithms before even considering parallel optimizations, but this may come at the cost of reduced ability to parallelize the algorithm. 
 
+See [the paper](./Paper.pdf) for a detailed analysis of the algorithms and explanations of their implementations.
+
 ## Usage
 To compute the signed distance field, an image must first be converted into a bit matrix through thresholding. This can be done with `SerialSDF.threshold()`. The signed distance field can then be computed using the appropriate functions in the `SerialSDF` or `ParallelSDF` modules.
 
