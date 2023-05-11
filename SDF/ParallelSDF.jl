@@ -57,7 +57,7 @@ Compute the signed distance field for a 2D matrix of booleans with Dijkstra'clos
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
-function dijkstraSDF2DSerialUDF(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
+function dijkstraSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
     # compute unsigned distance from black pixels, then subtract unsigned distance from white
     # to get SDF
     pos = undef
@@ -187,7 +187,7 @@ function linearSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
 end
 
 export bruteSDF2D
-export dijkstraSDF2DSerialUDF
+export dijkstraSDF2D
 export linearUDF2D
 export linearSDF2D
 end #ParallelSDF

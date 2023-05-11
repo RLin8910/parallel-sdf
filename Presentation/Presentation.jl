@@ -161,19 +161,16 @@ end
 @time SerialSDF.dijkstraSDF2D(petty_threshold)
 
 # ╔═╡ 68510fbf-c135-4157-9835-58f2d8950d85
-@time ParallelSDF.dijkstraSDF2DSerialUDF(petty_threshold)
+@time ParallelSDF.dijkstraSDF2D(petty_threshold)
 
 # ╔═╡ 957d00d9-707e-4c5e-96af-e011cefbb326
 asdfasdfa@time ParallelSDF.bruteSDF2D(petty_threshold)
-
-# ╔═╡ dc99c890-3401-488d-b551-2f75a6f472a2
-@time ParallelSDF.dijkstraSDF2DParallelUDF(petty_threshold)
 
 # ╔═╡ 53c81bbe-305e-4c69-8b85-2c3f56f5bbdc
 @time SerialSDF.dijkstraSDF2D(amogus_threshold)
 
 # ╔═╡ f575b998-3cf0-46e4-8340-43545ad58b5f
-@time ParallelSDF.dijkstraSDF2DSerialUDF(amogus_threshold)
+@time ParallelSDF.dijkstraSDF2D(amogus_threshold)
 
 # ╔═╡ 7fbdc040-3e01-426b-b3a7-1d3cd2591bb2
 # time serial Dijkstra step 
@@ -194,7 +191,7 @@ end
 
 # ╔═╡ a6a5633a-96bf-4583-a9eb-d1a059661d92
 #=╠═╡
-@time hugeParallel = ParallelSDF.dijkstraSDF2DSerialUDF(huge)
+@time hugeParallel = ParallelSDF.dijkstraSDF2D(huge)
   ╠═╡ =#
 
 # ╔═╡ 48553d19-b17b-4604-b538-1c5654f8fd22
