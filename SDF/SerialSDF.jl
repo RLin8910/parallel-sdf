@@ -66,7 +66,7 @@ function bruteSDF2D(img:: Union{Matrix{Bool}, BitMatrix}):: Matrix{Float64}
 end
 
 """
-Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra'closestX algorithm.
+Compute the unsigned distance field for a 2D matrix of booleans with Dijkstra's shortest path algorithm.
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
@@ -142,7 +142,7 @@ function dijkstraUDF2D(img:: Union{Matrix{Bool}, BitMatrix}, invert:: Bool = fal
 end
 
 """
-Compute the signed distance field for a 2D matrix of booleans with Dijkstra'closestX algorithm.
+Compute the signed distance field for a 2D matrix of booleans with Dijkstra's shortest path algorithm.
 
 True values are considered to be inside of the region, while false values are considered outside.
 """
@@ -208,7 +208,7 @@ function linearUDF2D(img:: Union{Matrix{Bool}, BitMatrix}, invert::Bool = false)
     end
 
     closestX = Array{Int64}(undef, size(img,1))
-    endpts = Array{Int64}(undef, size(img,2))
+    endpts = Array{Int64}(undef, size(img,1))
 
     # vertical pass - make use of previous best computed horizontal distances to pair with best vertical distance in similar
     # 2-pass approach
